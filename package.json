@@ -1,0 +1,27 @@
+{
+  "name": "nodejs-api-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Beginner-friendly demonstrations of eight API styles and protocols using Node.js",
+  "main": "src/rest/server.js",
+  "scripts": {
+    "rest": "node src/rest/server.js",
+    "graphql": "node src/graphql/server.js",
+    "soap": "node src/soap/server.js",
+    "websocket": "node src/websocket/server.js",
+    "rpc": "node src/rpc/server.js",
+    "grpc": "node src/grpc/server.js",
+    "grpc:client": "node src/grpc/client.js",
+    "webhook": "node src/webhook/server.js",
+    "sse": "node src/sse/server.js"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.13.4",
+    "@grpc/proto-loader": "^0.7.13",
+    "express": "^4.21.2",
+    "fast-xml-parser": "^5.2.5",
+    "graphql": "^16.10.0",
+    "graphql-http": "^1.22.4",
+    "ws": "^8.18.0"
+  }
+}
