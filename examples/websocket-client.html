@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>WebSocket API Lab</title></head>
+<body>
+  <h1>WebSocket demo chat</h1>
+  <p>Open this page in two tabs to see messages broadcast between clients.</p>
+  <p id="status">Connecting…</p>
+  <input id="message" placeholder="Type a message" maxlength="500">
+  <button id="send" disabled>Send</button>
+  <ul id="messages"></ul>
+  <script>
+    const socket = new WebSocket("ws://localhost:3004");
+    const status = document.querySelector("#status");
+    const send = document.querySelector("#send");
+    const input = document.querySelector("#message");
+    const list = document.querySelector("#messages");
+    socket.addEventListener("open", () => {
+      status.textContent = "Connected";
+      send.disabled = false;
+    });
+    socket.addEventListener("close", () => {
+      status.textContent = "Disconnected";
+      send.disabled = true;
+    });
+    socket.addEventListener("message", event => {
+      const item = document.createElement("li");
+      item.textContent = event.data;
+      list.appendChild(item);
+    });
+    send.addEventListener("click", () => {
+      const message = input.value.trim();
+      if (socket.readyState === WebSocket.OPEN && message) {
+        socket.send(message);
+        input.value = "";
+      }
+    });
+  </script>
+</body>
+</html>
