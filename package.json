@@ -13,7 +13,8 @@
     "grpc": "node src/grpc/server.js",
     "grpc:client": "node src/grpc/client.js",
     "webhook": "node src/webhook/server.js",
-    "sse": "node src/sse/server.js"
+    "sse": "node src/sse/server.js",
+    "test": "node --test"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.13.4",
