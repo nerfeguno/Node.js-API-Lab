@@ -1,37 +1,56 @@
 # Node.js API Lab
 
-A hands-on learning repository that demonstrates eight common API communication styles and patterns using small Node.js programs.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+
+A beginner-friendly, hands-on repository that demonstrates **eight API communication styles and patterns** using small, runnable Node.js examples. Explore how applications exchange data, send events, and communicate in real time.
+
+## Table of contents
+
+- [What you'll learn](#what-youll-learn)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Run the examples](#run-the-examples)
+- [Try each API](#try-each-api)
+- [Project structure](#project-structure)
+- [Important concepts](#important-concepts)
+- [Production considerations](#production-considerations)
+- [Suggested learning path](#suggested-learning-path)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## What you'll learn
 
 | Example | What it demonstrates | Local endpoint |
 |---|---|---|
-| REST | Resources, HTTP methods, status codes, JSON | `http://localhost:3001` |
-| GraphQL | Schema, queries, mutations | `http://localhost:3002/graphql` |
-| SOAP-style XML | XML request/response parsing | `http://localhost:3003/soap` |
+| REST | Resources, HTTP methods, status codes, and JSON | `http://localhost:3001` |
+| GraphQL | Schemas, queries, and mutations | `http://localhost:3002/graphql` |
+| SOAP-style XML | XML request and response parsing | `http://localhost:3003/soap` |
 | WebSocket | Persistent, two-way messaging | `ws://localhost:3004` |
 | JSON-RPC | Calling named remote methods | `http://localhost:3005/rpc` |
 | gRPC | Typed RPC with Protocol Buffers | `127.0.0.1:50051` |
-| Webhook | Receiving event notifications | `http://localhost:3006/webhooks/events` |
-| SSE | Server-to-client event streaming | `http://localhost:3007/events` |
+| Webhooks | Receiving event notifications | `http://localhost:3006/webhooks/events` |
+| Server-Sent Events (SSE) | Server-to-client event streaming | `http://localhost:3007/events` |
 
-> **Learning project:** examples use local servers and mostly in-memory data. They are not production-ready. Add authentication, authorization, validation, rate limits, logging, monitoring, and secure transport before deploying.
+> **Learning project:** These examples run locally and mostly use in-memory data. They are intended for education, not production deployment. Review the security and production considerations before adapting them for a real application.
 
 ## Requirements
 
-- Node.js 20+
-- npm
+- [Node.js 20 or later](https://nodejs.org/)
+- npm (included with Node.js)
 - A terminal and code editor
-- Optional: Postman, Insomnia, or curl for HTTP examples
+- Optional: [Postman](https://www.postman.com/), [Insomnia](https://insomnia.rest/), or `curl` for HTTP requests
 
-Check your installation:
+Check your versions:
 
 ```bash
 node --version
 npm --version
 ```
 
-## Install and run
+## Installation
+
+Clone this repository and install its dependencies:
 
 ```bash
 git clone https://github.com/nerfeguno/Node.js-API-Lab.git
@@ -39,34 +58,54 @@ cd Node.js-API-Lab
 npm install
 ```
 
-Start each example in its own terminal:
+## Run the examples
 
-```bash
-npm run rest
-npm run graphql
-npm run soap
-npm run websocket
-npm run rpc
-npm run grpc
-npm run webhook
-npm run sse
-```
+Start each example using its npm script. Run each server in a separate terminal:
 
-Each command starts only that example. Stop a server with `Ctrl+C`.
+| Example | Command |
+|---|---|
+| REST | `npm run rest` |
+| GraphQL | `npm run graphql` |
+| SOAP-style XML | `npm run soap` |
+| WebSocket | `npm run websocket` |
+| JSON-RPC | `npm run rpc` |
+| gRPC server | `npm run grpc` |
+| gRPC client | `npm run grpc:client` |
+| Webhook | `npm run webhook` |
+| SSE | `npm run sse` |
 
-## Quick tests
+Stop a running server with `Ctrl+C`.
+
+## Try each API
 
 ### 1. REST
 
+Start the server:
+
 ```bash
+npm run rest
+```
+
+Try these requests:
+
+```bash
+# Read all users
 curl http://localhost:3001/users
+
+# Read one user
 curl http://localhost:3001/users/1
+
+# Create a user
 curl -X POST http://localhost:3001/users \
   -H "Content-Type: application/json" \
   -d '{"name":"Amina","email":"amina@example.com"}'
+
+# Partially update a user
 curl -X PATCH http://localhost:3001/users/1 \
   -H "Content-Type: application/json" \
   -d '{"name":"John Updated"}'
+
+# Delete a user
 curl -X DELETE http://localhost:3001/users/2
 ```
 
@@ -74,21 +113,35 @@ REST organizes data as resources. HTTP methods communicate the intended operatio
 
 ### 2. GraphQL
 
-Send a POST request to `http://localhost:3002/graphql` with JSON:
+Start the server:
+
+```bash
+npm run graphql
+```
+
+Send a POST request to `http://localhost:3002/graphql` with this JSON body:
 
 ```json
 {"query":"{ users { id name email } }"}
 ```
 
-Mutation:
+Example mutation:
 
 ```json
-{"query":"mutation { addUser(name: \"Amina\", email: \"amina@example.com\") { id name email } }"}
+{"query":"mutation { addUser(name: \\"Amina\\", email: \\"amina@example.com\\") { id name email } }"}
 ```
 
-GraphQL lets the client request exactly the fields it needs from a typed schema.
+GraphQL lets clients request the fields they need from a typed schema.
 
 ### 3. SOAP-style XML
+
+Start the server:
+
+```bash
+npm run soap
+```
+
+Send the included XML example:
 
 ```bash
 curl -X POST http://localhost:3003/soap \
@@ -96,13 +149,27 @@ curl -X POST http://localhost:3003/soap \
   --data-binary @examples/soap-request.xml
 ```
 
-This is a simplified XML-over-HTTP teaching example, **not a fully standards-compliant SOAP implementation**. Full SOAP commonly involves strict envelopes, namespaces, faults, and WSDL contracts.
+This is a simplified XML-over-HTTP teaching example, **not a fully standards-compliant SOAP implementation**. Full SOAP commonly involves defined envelopes, namespaces, faults, and WSDL contracts.
 
 ### 4. WebSocket
 
-Run `npm run websocket`, then open `examples/websocket-client.html` in two browser tabs. Send a message in one tab and observe it in the other. WebSockets keep a connection open for two-way communication.
+Start the server:
+
+```bash
+npm run websocket
+```
+
+Open `examples/websocket-client.html` in two browser tabs. Send a message from one tab and observe it in the other. WebSockets keep a connection open for two-way communication.
 
 ### 5. JSON-RPC
+
+Start the server:
+
+```bash
+npm run rpc
+```
+
+Call the `add` method:
 
 ```bash
 curl -X POST http://localhost:3005/rpc \
@@ -110,25 +177,33 @@ curl -X POST http://localhost:3005/rpc \
   -d '{"jsonrpc":"2.0","method":"add","params":{"a":10,"b":20},"id":1}'
 ```
 
-Expected result contains `"result":30`. JSON-RPC represents a remote procedure call as a JSON request.
+The response should contain `"result":30`. JSON-RPC represents a remote procedure call as a JSON request.
 
 ### 6. gRPC
 
-Terminal 1:
+Open two terminals. Start the server in the first:
 
 ```bash
 npm run grpc
 ```
 
-Terminal 2:
+Run the client in the second:
 
 ```bash
 npm run grpc:client
 ```
 
-Read `src/grpc/user.proto` to see the service contract. gRPC commonly uses Protocol Buffers and HTTP/2 for efficient typed communication.
+Read `src/grpc/user.proto` to explore the service contract. gRPC commonly uses Protocol Buffers and HTTP/2 for efficient, typed communication.
 
-### 7. Webhook
+### 7. Webhooks
+
+Start the server:
+
+```bash
+npm run webhook
+```
+
+Send a sample event:
 
 ```bash
 curl -X POST http://localhost:3006/webhooks/events \
@@ -136,16 +211,22 @@ curl -X POST http://localhost:3006/webhooks/events \
   -d '{"event":"order.created","data":{"orderId":"ORD-1001"}}'
 ```
 
-A webhook is an event-delivery pattern: another service sends an HTTP request to your application when something happens. This demo does not verify signatures; never trust public webhook payloads without verification.
+A webhook is an event-delivery pattern: another service sends an HTTP request to your application when something happens. This demo does not verify signatures. Never trust public webhook payloads without verifying them.
 
 ### 8. Server-Sent Events (SSE)
 
-Run `npm run sse`, then open `examples/sse-client.html`. SSE streams updates from server to browser over a single HTTP connection. Unlike WebSocket, it is primarily server-to-client.
+Start the server:
 
-## Repository structure
+```bash
+npm run sse
+```
+
+Open `examples/sse-client.html` in your browser. SSE streams updates from a server to a browser over one HTTP connection. Unlike WebSockets, it is primarily server-to-client.
+
+## Project structure
 
 ```text
-.
+Node.js-API-Lab/
 ├── docs/
 │   └── api-types.md
 ├── examples/
@@ -158,26 +239,43 @@ Run `npm run sse`, then open `examples/sse-client.html`. SSE streams updates fro
 │   ├── soap/server.js
 │   ├── websocket/server.js
 │   ├── rpc/server.js
-│   ├── grpc/{client.js,server.js,user.proto}
+│   ├── grpc/
+│   │   ├── client.js
+│   │   ├── server.js
+│   │   └── user.proto
 │   ├── webhook/server.js
 │   └── sse/server.js
+├── .gitignore
+├── LICENSE
 ├── package.json
 └── README.md
 ```
 
 ## Important concepts
 
-An API is an interface or contract that lets software communicate. Not every API type describes the same layer: REST is an architectural style, GraphQL is a query language/runtime, SOAP and WebSocket are protocols, gRPC is an RPC framework, and webhooks are an event-delivery pattern.
+An API (Application Programming Interface) is a contract that allows software systems to communicate. The examples in this repository do not all describe the same technical layer:
 
-Access classifications are separate from communication styles:
-- **Public API:** offered to external developers, sometimes with keys or quotas.
+- **REST** is an architectural style.
+- **GraphQL** is a query language and runtime for APIs.
+- **SOAP** is a messaging protocol.
+- **WebSocket** is a communication protocol for full-duplex connections.
+- **JSON-RPC** is a remote procedure call protocol.
+- **gRPC** is a remote procedure call framework.
+- **Webhooks** are an event-delivery pattern.
+- **SSE** is a server-to-client streaming mechanism over HTTP.
+
+API access classifications are a separate concept:
+
+- **Public API:** available to external developers, sometimes with API keys or usage quotas.
 - **Private API:** restricted to an organization's internal systems.
 - **Partner API:** available to approved external organizations.
-- **Composite API:** combines multiple operations or services into one interface.
+- **Composite API:** combines multiple operations or services behind one interface.
 
-For more detail, see [API Types Reference](docs/api-types.md).
+For a deeper explanation, see the [API Types Reference](docs/api-types.md).
 
-## Production checklist
+## Production considerations
+
+These projects are simplified learning examples. Before using similar code in a real application:
 
 - Use HTTPS/TLS and secure gRPC credentials.
 - Validate request bodies, parameters, and message sizes.
@@ -192,19 +290,28 @@ For more detail, see [API Types Reference](docs/api-types.md).
 
 ## Suggested learning path
 
-1. HTTP, JSON, request/response, and status codes.
-2. REST endpoints and CRUD operations.
-3. Calling APIs with Node.js `fetch`.
-4. GraphQL schemas, queries, and mutations.
-5. Webhooks and SSE.
-6. WebSockets.
-7. JSON-RPC and gRPC.
-8. Authentication, testing, documentation, and deployment.
+1. Understand HTTP, JSON, requests, responses, and status codes.
+2. Build REST endpoints and CRUD operations.
+3. Call APIs with Node.js `fetch`.
+4. Explore GraphQL schemas, queries, and mutations.
+5. Experiment with webhooks and SSE.
+6. Build real-time features with WebSockets.
+7. Explore JSON-RPC and gRPC.
+8. Learn authentication, testing, documentation, and deployment.
 
 ## Contributing
 
-Beginner-friendly improvements are welcome. Open an issue to suggest a topic, report a problem, or propose another example. Keep examples small, runnable, and clearly documented.
+Contributions and beginner-friendly improvements are welcome.
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Make your changes and test the example.
+4. Open a pull request with a clear description.
+
+You can also open an issue to suggest a topic, report a bug, or request another API example. Keep examples small, runnable, and clearly documented.
 
 ## License
 
-No license has been added yet. Add a license file before accepting reuse or contributions under specific terms.
+This project is licensed under the **MIT License**. You are free to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the software, subject to the conditions in the license.
+
+See the [LICENSE](LICENSE) file for the full license text.
