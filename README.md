@@ -12,6 +12,8 @@ A beginner-friendly, hands-on repository that demonstrates **eight API communica
 - [Installation](#installation)
 - [Run the examples](#run-the-examples)
 - [Try each API](#try-each-api)
+- [Postman collection](#postman-collection)
+- [Automated tests](#automated-tests)
 - [Project structure](#project-structure)
 - [Important concepts](#important-concepts)
 - [Production considerations](#production-considerations)
@@ -233,6 +235,12 @@ Node.js-API-Lab/
 │   ├── soap-request.xml
 │   ├── sse-client.html
 │   └── websocket-client.html
+├── postman/
+│   └── Node.js-API-Lab.postman_collection.json
+├── tests/
+│   └── api.test.js
+├── .github/
+│   └── workflows/ci.yml
 ├── src/
 │   ├── rest/server.js
 │   ├── graphql/server.js
@@ -250,6 +258,42 @@ Node.js-API-Lab/
 ├── package.json
 └── README.md
 ```
+
+
+## Postman collection
+
+Import the ready-to-use collection into Postman:
+
+[`postman/Node.js-API-Lab.postman_collection.json`](postman/Node.js-API-Lab.postman_collection.json)
+
+In Postman, select **Import**, choose the collection JSON file, and run the example servers you want to test. The collection includes requests for REST, GraphQL, SOAP-style XML, JSON-RPC, and webhooks. Requests include basic Postman test assertions.
+
+The WebSocket, gRPC, and SSE demonstrations use their respective protocols rather than ordinary HTTP request/response flows. Run them using the instructions above and the browser examples in `examples/`.
+
+## Automated tests
+
+The project uses the built-in Node.js test runner, so no separate test framework is required.
+
+Run the complete integration test suite:
+
+```bash
+npm test
+```
+
+The tests start and stop local demo servers automatically and check all eight examples:
+
+- REST CRUD operations
+- GraphQL query and mutation
+- SOAP-style XML request handling
+- WebSocket connection and message broadcast
+- JSON-RPC success and error responses
+- gRPC user lookup
+- Webhook acceptance and invalid payload handling
+- SSE event streaming
+
+Tests use the same local ports as the demos. Make sure those ports are available before running the suite.
+
+A GitHub Actions workflow at `.github/workflows/ci.yml` runs the test suite on pushes and pull requests targeting `main`.
 
 ## Important concepts
 
