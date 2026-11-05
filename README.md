@@ -13,6 +13,7 @@ A beginner-friendly, hands-on repository that demonstrates **eight API communica
 - [Run the examples](#run-the-examples)
 - [Try each API](#try-each-api)
 - [Real-world examples and practical use cases](#real-world-examples-and-practical-use-cases)
+- [Architecture and sequence diagrams](#architecture-and-sequence-diagrams)
 - [Postman collection](#postman-collection)
 - [Automated tests](#automated-tests)
 - [Project structure](#project-structure)
@@ -458,12 +459,17 @@ This is one possible architecture, not a mandatory design. Select technologies b
 
 No API style is universally best. A good design starts with the communication requirement and chooses the simplest approach that satisfies it.
 
+## Architecture and sequence diagrams
+
+Explore the [API Architecture and Sequence Diagrams](docs/diagrams.md) guide for a high-level system architecture and step-by-step Mermaid sequence diagrams for all eight API styles. GitHub renders the diagrams directly in the repository.
+
 ## Project structure
 
 ```text
 Node.js-API-Lab/
 ├── docs/
-│   └── api-types.md
+│   ├── api-types.md
+│   └── diagrams.md
 ├── examples/
 │   ├── soap-request.xml
 │   ├── sse-client.html
