@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>SSE API Lab</title></head>
+<body>
+  <h1>Server-Sent Events demo</h1>
+  <p id="status">Connecting…</p>
+  <ul id="events"></ul>
+  <script>
+    const status = document.querySelector("#status");
+    const source = new EventSource("http://localhost:3007/events");
+    source.addEventListener("open", () => status.textContent = "Connected");
+    source.addEventListener("update", event => {
+      const item = document.createElement("li");
+      item.textContent = event.data;
+      document.querySelector("#events").appendChild(item);
+    });
+    source.addEventListener("error", () => {
+      status.textContent = "Connection closed or reconnecting";
+    });
+  </script>
+</body>
+</html>
